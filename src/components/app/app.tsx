@@ -1,11 +1,8 @@
-import Offer from '../../pages/offer/Offer';
+import Router from '../router/router';
 
 function App(): JSX.Element {
-
   return (
-    <div>
-      <Offer />
-    </div>
+    <Router />
   );
 }
 

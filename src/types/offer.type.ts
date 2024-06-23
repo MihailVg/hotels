@@ -1,6 +1,6 @@
 import { CityType } from './city.type';
-import { HostType } from './host.type';
 import { LocationType } from './location.type';
+import { UserType } from './user.type';
 
 export type OfferType = {
   city: CityType;
@@ -15,7 +15,7 @@ export type OfferType = {
   maxAdults: number;
   price: number;
   goods: string[];
-  host: HostType;
+  host: UserType;
   description: string;
   location: LocationType;
   id: string;
