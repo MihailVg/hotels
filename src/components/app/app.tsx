@@ -1,8 +1,19 @@
+import { HelmetProvider } from 'react-helmet-async';
+import { OfferType } from '../../types';
 import Router from '../router/router';
+import { BrowserRouter } from 'react-router-dom';
 
-function App(): JSX.Element {
+type AppProps = {
+  offers: OfferType[];
+};
+
+function App({ offers }: AppProps): JSX.Element {
   return (
-    <Router />
+    <HelmetProvider>
+      <BrowserRouter>
+        <Router offers={offers} />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

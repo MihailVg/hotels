@@ -1,22 +1,53 @@
 import { Link } from 'react-router-dom';
-import LoginForm from '../../components/login-form/login-form';
-import LoginHeader from '../../components/login-header/login-header';
-import { RoutesData } from '../../types/routes.type';
+import { RoutesData } from '../../types';
+import Header from '../../components/header/header';
+import { Helmet } from 'react-helmet-async';
 
 export default function LoginPage() {
   return (
     <div className="page page--gray page--login">
-      <LoginHeader />
+      <Helmet>
+        <title>Login</title>
+        <meta name="description" content="Login" />
+      </Helmet>
+      <Header />
 
       <main className="page__main page__main--login">
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <LoginForm />
+            <form className="login__form form" action="#" method="post">
+              <div className="login__input-wrapper form__input-wrapper">
+                <label className="visually-hidden">E-mail</label>
+                <input
+                  className="login__input form__input"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div className="login__input-wrapper form__input-wrapper">
+                <label className="visually-hidden">Password</label>
+                <input
+                  className="login__input form__input"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <button
+                className="login__submit form__submit button"
+                type="submit"
+              >
+                Sign in
+              </button>
+            </form>
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={RoutesData[0].path}>
+              <Link className="locations__item-link" to={RoutesData.Main}>
                 <span>Amsterdam</span>
               </Link>
             </div>

@@ -1,8 +1,13 @@
+import { Helmet } from 'react-helmet-async';
 import Header from '../../components/header/header';
 
 export default function NotFoundPage() {
   return (
     <div className="page">
+      <Helmet>
+        <title>Not found!</title>
+        <meta name="description" content='Not found!' />
+      </Helmet>
       <div className="page page--gray page--main">
         <Header />
         <main className="page__main page__main--offer">

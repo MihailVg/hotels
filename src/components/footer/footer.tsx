@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { RoutesData } from '../../types/routes.type';
+import { RoutesData } from '../../types';
 
 export default function Footer() {
   return (
     <footer className="footer container">
-      <Link className="footer__logo-link" to={RoutesData[0].path}>
+      <Link className="footer__logo-link" to={RoutesData.Main}>
         <img
           className="footer__logo"
           src="img/logo.svg"
