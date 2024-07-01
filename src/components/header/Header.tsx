@@ -1,17 +1,21 @@
-import { Link } from 'react-router-dom';
-import { RoutesData } from '../../types';
+import { NavLink, useLocation } from 'react-router-dom';
+import { AppRoutes } from '../../types';
 import { getAuthStatus } from '../../utils/utils';
 import { AuthStatus } from '../../types';
 
 export default function Header() {
-  const path: string = window.location.pathname;
-  const loginPath: string = RoutesData.Login;
+  const { pathname } = useLocation();
+  const loginPath: string = AppRoutes.Login;
+
+  const getStyleForNavLink = ({ isActive }: { isActive: boolean }): Record<string, string> =>
+    isActive ? { pointerEvents: 'none' } : {};
+
   return (
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <Link className="header__logo-link" to={RoutesData.Main}>
+            <NavLink className="header__logo-link header__logo-link--active" to={AppRoutes.Main} style={getStyleForNavLink}>
               <img
                 className="header__logo"
                 src="img/logo.svg"
@@ -19,31 +23,31 @@ export default function Header() {
                 width="81"
                 height="41"
               />
-            </Link>
+            </NavLink>
           </div>
-          {path !== loginPath && (
+          {pathname !== loginPath && (
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
                   {getAuthStatus(AuthStatus.Auth) && (
-                    <Link
+                    <NavLink
                       className="header__nav-link header__nav-link--profile"
-                      to={RoutesData.Favorites}
+                      to={AppRoutes.Favorites}
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
                         Oliver.conner@gmail.com
                       </span>
                       <span className="header__favorite-count">3</span>
-                    </Link>
+                    </NavLink>
                   )}
                 </li>
                 <li className="header__nav-item">
-                  <Link className="header__nav-link" to={RoutesData.Login}>
+                  <NavLink className="header__nav-link" to={AppRoutes.Login}>
                     <span className="header__signout">
                       {getAuthStatus(AuthStatus.Auth) ? 'Sign out' : 'Sign in'}
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </nav>

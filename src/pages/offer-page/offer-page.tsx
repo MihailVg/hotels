@@ -1,7 +1,7 @@
 import Header from '../../components/header/header';
 import ReviewForm from '../../components/review-form/review-form';
 import ReviewsList from '../../components/reviews-list/reviews-list';
-import { OfferType } from '../../types';
+import { OfferType, ReviewType } from '../../types';
 import {
   getAuthStatus,
   getRatingPercent,
@@ -11,12 +11,15 @@ import { CARD_CLASS_NAME_NEAR, CARD_CLASS_NAME_NEAR_IMG } from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
 import { AuthStatus } from '../../types';
 import { Helmet } from 'react-helmet-async';
+import Map from '../../components/map/map';
+import { MAX_IMG_LENGTH, MIN_IMG_LENGTH } from './offer-page.consts';
 
 type OfferPageProps = {
   offers: OfferType[];
+  reviews: ReviewType[];
 };
 
-export default function OfferPage({ offers }: OfferPageProps) {
+export default function OfferPage({ offers, reviews }: OfferPageProps) {
   if (!offers) {
     return null;
   }
@@ -34,6 +37,7 @@ export default function OfferPage({ offers }: OfferPageProps) {
     goods,
     description,
     host,
+    images,
   } = offers[0];
 
   return (
@@ -48,48 +52,15 @@ export default function OfferPage({ offers }: OfferPageProps) {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/room.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-02.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-03.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/studio-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
-              <div className="offer__image-wrapper">
-                <img
-                  className="offer__image"
-                  src="img/apartment-01.jpg"
-                  alt="Photo studio"
-                />
-              </div>
+              {images.slice(MIN_IMG_LENGTH, MAX_IMG_LENGTH).map((image, index) => (
+                <div key={`${image + index}`} className="offer__image-wrapper">
+                  <img
+                    className="offer__image"
+                    src={image}
+                    alt={title}
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="offer__container container">
@@ -155,9 +126,9 @@ export default function OfferPage({ offers }: OfferPageProps) {
                     />
                   </div>
                   <span className="offer__user-name">{host.name}</span>
-                  {host.isPro ? (
+                  {host.isPro && (
                     <span className="offer__user-status">Pro</span>
-                  ) : null}
+                  )}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{description}</p>
@@ -165,14 +136,14 @@ export default function OfferPage({ offers }: OfferPageProps) {
               </div>
               <section className="offer__reviews reviews">
                 <h2 className="reviews__title">
-                  Reviews &middot; <span className="reviews__amount">1</span>
+                  Reviews &middot; <span className="reviews__amount">{reviews.length}</span>
                 </h2>
-                <ReviewsList />
-                {getAuthStatus(AuthStatus.Auth) ? <ReviewForm /> : null}
+                <ReviewsList reviews={reviews} />
+                {getAuthStatus(AuthStatus.Auth) && <ReviewForm />}
               </section>
             </div>
           </div>
-          <section className="offer__map map"></section>
+          <Map className="offer__map" />
         </section>
         <div className="container">
           <section className="near-places places">

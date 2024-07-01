@@ -1,3 +1,7 @@
-export default function Map() {
-  return <section className="cities__map map"></section>;
+type MapProps = {
+  className: string;
+}
+
+export default function Map({className} : MapProps) {
+  return <section className={`${className} map`}></section>;
 }

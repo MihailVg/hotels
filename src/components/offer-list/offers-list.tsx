@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   CARD_CLASS_NAME_CITIES,
   CARD_CLASS_NAME_CITIES_IMG,
@@ -10,12 +11,15 @@ type OfferListProps = {
 };
 
 export default function OffersList({ offers }: OfferListProps) {
+  const [offerInfo, setOfferInfo] = useState <OfferType | string> ('');
+
   return (
     <div className="cities__places-list places__list tabs__content">
-      {offers.map((item, id) => (
+      {offers.map((offer) => (
         <OfferCard
-          key={item.id}
-          offer={offers[id]}
+          setOfferInfo={setOfferInfo}
+          key={offer.id}
+          offer={offer}
           cardClassName={CARD_CLASS_NAME_CITIES}
           imgClassName={CARD_CLASS_NAME_CITIES_IMG}
         />

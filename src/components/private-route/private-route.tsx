@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom';
 import { AuthStatus } from '../../types';
-import { RoutesData } from '../../types';
+import { AppRoutes } from '../../types';
 import { getAuthStatus } from '../../utils/utils';
 
 type PrivateRouteProps = {
   auth: AuthStatus;
-  redirectTo: RoutesData;
+  redirectTo: AppRoutes;
   children: JSX.Element;
 };
 

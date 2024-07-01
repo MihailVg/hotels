@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { RoutesData } from '../../types';
+import { AppRoutes } from '../../types';
 import Header from '../../components/header/header';
 import { Helmet } from 'react-helmet-async';
 
@@ -47,7 +47,7 @@ export default function LoginPage() {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={RoutesData.Main}>
+              <Link className="locations__item-link" to={AppRoutes.Main}>
                 <span>Amsterdam</span>
               </Link>
             </div>

@@ -1,11 +1,40 @@
+import { reviewsData } from '../../mocks/reviews.data';
+import { useState } from 'react';
+
 export default function ReviewForm() {
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+
+  const onChangeComment = (value: string) => {
+    setComment(value);
+  };
+
+  const date = new Date();
+
+  const handleButtonSubmit = () => {
+    if (rating && comment.length > 50) {
+      reviewsData.push({
+        id: '3',
+        user: {
+          isPro: false,
+          name: 'Test',
+          avatarUrl: '../../img/avatar-max.jpg',
+        },
+        rating: rating,
+        comment: comment,
+        date: date.toISOString(),
+      });
+    }
+  };
+
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form">
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
         <input
+          onClick={() => setRating(5)}
           className="form__rating-input visually-hidden"
           name="rating"
           value="5"
@@ -23,6 +52,7 @@ export default function ReviewForm() {
         </label>
 
         <input
+          onClick={() => setRating(4)}
           className="form__rating-input visually-hidden"
           name="rating"
           value="4"
@@ -40,6 +70,7 @@ export default function ReviewForm() {
         </label>
 
         <input
+          onClick={() => setRating(3)}
           className="form__rating-input visually-hidden"
           name="rating"
           value="3"
@@ -57,6 +88,7 @@ export default function ReviewForm() {
         </label>
 
         <input
+          onClick={() => setRating(2)}
           className="form__rating-input visually-hidden"
           name="rating"
           value="2"
@@ -74,6 +106,7 @@ export default function ReviewForm() {
         </label>
 
         <input
+          onClick={() => setRating(1)}
           className="form__rating-input visually-hidden"
           name="rating"
           value="1"
@@ -91,6 +124,8 @@ export default function ReviewForm() {
         </label>
       </div>
       <textarea
+        value={comment}
+        onChange={(event) => onChangeComment(event.target.value)}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"
@@ -105,7 +140,10 @@ export default function ReviewForm() {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleButtonSubmit();
+          }}
         >
           Submit
         </button>

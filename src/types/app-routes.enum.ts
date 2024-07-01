@@ -1,4 +1,4 @@
-export enum RoutesData {
+export enum AppRoutes {
   Main = '/',
   Login = '/login',
   Offer = '/offer/:id',
