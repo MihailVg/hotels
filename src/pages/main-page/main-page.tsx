@@ -8,9 +8,10 @@ import Map from '../../components/map/map';
 
 type MainPageProps = {
   offers: OfferType[];
+  onActiveOffer?: (offer: OfferType | null) => void;
 };
 
-export default function MainPage({ offers }: MainPageProps) {
+export default function MainPage({ offers, onActiveOffer }: MainPageProps) {
   return (
     <div className="page page--gray page--main">
       <Helmet>
@@ -31,7 +32,7 @@ export default function MainPage({ offers }: MainPageProps) {
                   {offers.length} places to stay in Amsterdam
                 </b>
                 <Sorting />
-                <OffersList offers={offers} />
+                <OffersList offers={offers} onActiveOffer={onActiveOffer}/>
               </section>
             ) : (
               <section className="cities__no-places">

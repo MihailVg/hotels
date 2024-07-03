@@ -10,16 +10,27 @@ type OfferCardProps = {
   imgClassName?: string;
   imgWidth?: string;
   imgHeight?: string;
-  setOfferInfo?: React.FC;
+  onActiveOffer?: (offer: OfferType | null) => void;
 };
 
-export default function OfferCard({ offer, cardClassName, imgClassName, imgWidth, imgHeight, setOfferInfo }: OfferCardProps) {
+export default function OfferCard({
+  offer,
+  cardClassName,
+  imgClassName,
+  imgWidth,
+  imgHeight,
+  onActiveOffer,
+}: OfferCardProps) {
   const { isPremium, previewImage, price, title, rating, type } = offer;
   const articleClassName = `${cardClassName} place-card`;
   const imageClassName = `${imgClassName} place-card__image-wrapper`;
 
   return (
-    <article className={articleClassName} onMouseOver={() => setOfferInfo(offer)} onMouseLeave={() => setOfferInfo('')}>
+    <article
+      className={articleClassName}
+      onMouseOver={() => onActiveOffer?.(offer)}
+      onMouseLeave={() => onActiveOffer?.(null)}
+    >
       {isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>

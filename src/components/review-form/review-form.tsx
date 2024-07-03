@@ -1,34 +1,47 @@
-import { reviewsData } from '../../mocks/reviews.data';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { ReviewType } from '../../types';
 
-export default function ReviewForm() {
+type ReviewFormProps = {
+  setComments: (comment : (prev: ReviewType[]) => ReviewType[]) => void;
+}
+
+export default function ReviewForm({ setComments } : ReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [id, setId] = useState(3);
+  const isValid = rating && comment.length > 50;
 
-  const onChangeComment = (value: string) => {
-    setComment(value);
+  const handleChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(evt.target.value);
   };
 
   const date = new Date();
 
-  const handleButtonSubmit = () => {
-    if (rating && comment.length > 50) {
-      reviewsData.push({
-        id: '3',
-        user: {
-          isPro: false,
-          name: 'Test',
-          avatarUrl: '../../img/avatar-max.jpg',
+  const handleSubmit = (evt: FormEvent) => {
+    evt.preventDefault();
+
+    if (isValid) {
+      setId(id + 1);
+
+      setComments((prev : ReviewType[]) => [
+        ...prev,
+        {
+          id: `${id}`,
+          user: {
+            isPro: false,
+            name: 'Test',
+            avatarUrl: '../../img/avatar-max.jpg',
+          },
+          rating: rating,
+          comment: comment,
+          date: date.toISOString(),
         },
-        rating: rating,
-        comment: comment,
-        date: date.toISOString(),
-      });
+      ]);
     }
   };
 
   return (
-    <form className="reviews__form form">
+    <form className="reviews__form form" onSubmit={handleSubmit}>
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -125,7 +138,7 @@ export default function ReviewForm() {
       </div>
       <textarea
         value={comment}
-        onChange={(event) => onChangeComment(event.target.value)}
+        onChange={handleChange}
         className="reviews__textarea form__textarea"
         id="review"
         name="review"
@@ -137,14 +150,7 @@ export default function ReviewForm() {
           <span className="reviews__star">rating</span> and describe your stay
           with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button
-          className="reviews__submit form__submit button"
-          type="submit"
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleButtonSubmit();
-          }}
-        >
+        <button className="reviews__submit form__submit button" type="submit" disabled={!isValid}>
           Submit
         </button>
       </div>

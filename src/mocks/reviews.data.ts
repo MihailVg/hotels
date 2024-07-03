@@ -6,7 +6,7 @@ export const reviewsData: ReviewType[] = [
     user: {
       isPro: true,
       name: 'Corey',
-      avatarUrl: '../../public/img/avatar-max.jpg',
+      avatarUrl: '../../img/avatar-max.jpg',
     },
     rating: 4,
     comment:
@@ -18,7 +18,7 @@ export const reviewsData: ReviewType[] = [
     user: {
       isPro: false,
       name: 'Zak',
-      avatarUrl: '../../public/img/avatar-max.jpg',
+      avatarUrl: '../../img/avatar-max.jpg',
     },
     rating: 3,
     comment:

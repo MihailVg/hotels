@@ -15,12 +15,14 @@ import Map from '../../components/map/map';
 import { MAX_IMG_LENGTH, MIN_IMG_LENGTH } from './offer-page.consts';
 
 type OfferPageProps = {
+  offer: OfferType | null;
   offers: OfferType[];
   reviews: ReviewType[];
+  setComments: (comment : (prev: ReviewType[]) => ReviewType[]) => void;
 };
 
-export default function OfferPage({ offers, reviews }: OfferPageProps) {
-  if (!offers) {
+export default function OfferPage({ offer, reviews, setComments, offers }: OfferPageProps) {
+  if (!offer) {
     return null;
   }
 
@@ -38,7 +40,7 @@ export default function OfferPage({ offers, reviews }: OfferPageProps) {
     description,
     host,
     images,
-  } = offers[0];
+  } = offer;
 
   return (
     <div className="page">
@@ -139,7 +141,7 @@ export default function OfferPage({ offers, reviews }: OfferPageProps) {
                   Reviews &middot; <span className="reviews__amount">{reviews.length}</span>
                 </h2>
                 <ReviewsList reviews={reviews} />
-                {getAuthStatus(AuthStatus.Auth) && <ReviewForm />}
+                {getAuthStatus(AuthStatus.Auth) && <ReviewForm setComments={setComments}/>}
               </section>
             </div>
           </div>

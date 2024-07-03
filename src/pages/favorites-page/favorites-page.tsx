@@ -10,15 +10,10 @@ type FavoritesPageProps = {
 };
 
 export default function FavoritesPage({ offers }: FavoritesPageProps) {
-  if (!offers) {
-    return null;
-  }
-
   const favoritePlaces = offers.filter((offer) => offer.isFavorite);
-  const favoriteCitiesArray = favoritePlaces.map((offer) => offer.city.name);
-  const uniqFavoriteCitiesArray = favoriteCitiesArray.filter(
-    (city, index) => index === favoriteCitiesArray.lastIndexOf(city)
-  );
+  const uniqCitiesList = [
+    ...new Set(favoritePlaces.map((offer) => offer.city.name))
+  ].sort((a, b) => a > b ? 1 : -1);
 
   return (
     <div className="page">
@@ -34,7 +29,7 @@ export default function FavoritesPage({ offers }: FavoritesPageProps) {
             <section className="favorites">
               <h1 className="favorites__title">Saved listing</h1>
               <ul className="favorites__list">
-                {uniqFavoriteCitiesArray.map((item) => (
+                {uniqCitiesList.map((item) => (
                   <li key={item} className="favorites__locations-items">
                     <div className="favorites__locations locations locations--current">
                       <div className="locations__item">
@@ -47,7 +42,7 @@ export default function FavoritesPage({ offers }: FavoritesPageProps) {
                       </div>
                     </div>
                     <div className="favorites__places">
-                      {favoritePlaces.filter((offer) => offer.city.name === item).map((offer) => (
+                      {favoritePlaces.map((offer) => offer.city.name === item && (
                         <OfferCard
                           key={offer.id}
                           offer={offer}
