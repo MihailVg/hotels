@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { AppRoutes } from '../../types';
 import { OfferType } from '../../types';
 import { getRatingPercent } from '../../utils/utils';
-import React from 'react';
 
 type OfferCardProps = {
   offer: OfferType;
@@ -21,9 +20,10 @@ export default function OfferCard({
   imgHeight,
   onActiveOffer,
 }: OfferCardProps) {
-  const { isPremium, previewImage, price, title, rating, type } = offer;
+  const { isPremium, previewImage, price, title, rating, type, id } = offer;
   const articleClassName = `${cardClassName} place-card`;
   const imageClassName = `${imgClassName} place-card__image-wrapper`;
+  const path = AppRoutes.Offer.replace(':id', id);
 
   return (
     <article
@@ -37,7 +37,7 @@ export default function OfferCard({
         </div>
       )}
       <div className={imageClassName}>
-        <Link to={AppRoutes.Offer}>
+        <Link to={path}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -67,7 +67,7 @@ export default function OfferCard({
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={AppRoutes.Offer}>{title}</Link>
+          <Link to={path}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

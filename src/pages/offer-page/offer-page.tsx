@@ -1,32 +1,33 @@
 import Header from '../../components/header/header';
-import ReviewForm from '../../components/review-form/review-form';
-import ReviewsList from '../../components/reviews-list/reviews-list';
 import { OfferType, ReviewType } from '../../types';
 import {
-  getAuthStatus,
   getRatingPercent,
   getWordEnding,
 } from '../../utils/utils';
 import { CARD_CLASS_NAME_NEAR, CARD_CLASS_NAME_NEAR_IMG } from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
-import { AuthStatus } from '../../types';
 import { Helmet } from 'react-helmet-async';
 import Map from '../../components/map/map';
-import { MAX_IMG_LENGTH, MIN_IMG_LENGTH } from './offer-page.consts';
+import { MAX_IMG_LENGTH, MAX_NEAR_PLACES, MIN_IMG_LENGTH } from './offer-page.consts';
+import NotFoundPage from '../not-found-page/not-found-page';
+import { useParams } from 'react-router-dom';
+import ReviewsSection from '../../components/reviews-section/reviews-section';
 
 type OfferPageProps = {
-  offer: OfferType | null;
   offers: OfferType[];
   reviews: ReviewType[];
   setComments: (comment : (prev: ReviewType[]) => ReviewType[]) => void;
 };
 
-export default function OfferPage({ offer, reviews, setComments, offers }: OfferPageProps) {
+export default function OfferPage({ reviews, setComments, offers }: OfferPageProps) {
+  const { id } = useParams();
+  const offer = offers.find((someOffer) => someOffer.id === id);
+
   if (!offer) {
-    return null;
+    return <NotFoundPage />;
   }
 
-  const nearOffers = offers.filter((item, id) => (id < 3 ? item : null));
+  const nearOffers = offers.filter((item, i) => (i < MAX_NEAR_PLACES ? item : null));
 
   const {
     isPremium,
@@ -136,13 +137,7 @@ export default function OfferPage({ offer, reviews, setComments, offers }: Offer
                   <p className="offer__text">{description}</p>
                 </div>
               </div>
-              <section className="offer__reviews reviews">
-                <h2 className="reviews__title">
-                  Reviews &middot; <span className="reviews__amount">{reviews.length}</span>
-                </h2>
-                <ReviewsList reviews={reviews} />
-                {getAuthStatus(AuthStatus.Auth) && <ReviewForm setComments={setComments}/>}
-              </section>
+              <ReviewsSection reviews={reviews} setComments={setComments} />
             </div>
           </div>
           <Map className="offer__map" />

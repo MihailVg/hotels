@@ -25,7 +25,7 @@ export default function FavoritesPage({ offers }: FavoritesPageProps) {
 
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
-          {favoritePlaces ? (
+          {favoritePlaces.length ? (
             <section className="favorites">
               <h1 className="favorites__title">Saved listing</h1>
               <ul className="favorites__list">

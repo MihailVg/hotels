@@ -1,11 +1,14 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppRoutes } from '../../types';
-import { getAuthStatus } from '../../utils/utils';
-import { AuthStatus } from '../../types';
+import { checkAuthStatus } from '../../utils/utils';
 
 export default function Header() {
   const { pathname } = useLocation();
   const loginPath: string = AppRoutes.Login;
+
+  function signOut() {
+    localStorage.clear();
+  }
 
   const getStyleForNavLink = ({ isActive }: { isActive: boolean }): Record<string, string> =>
     isActive ? { pointerEvents: 'none' } : {};
@@ -29,14 +32,14 @@ export default function Header() {
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  {getAuthStatus(AuthStatus.Auth) && (
+                  {checkAuthStatus() && (
                     <NavLink
                       className="header__nav-link header__nav-link--profile"
                       to={AppRoutes.Favorites}
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
-                        Oliver.conner@gmail.com
+                        admin@mail.com
                       </span>
                       <span className="header__favorite-count">3</span>
                     </NavLink>
@@ -44,8 +47,8 @@ export default function Header() {
                 </li>
                 <li className="header__nav-item">
                   <NavLink className="header__nav-link" to={AppRoutes.Login}>
-                    <span className="header__signout">
-                      {getAuthStatus(AuthStatus.Auth) ? 'Sign out' : 'Sign in'}
+                    <span className="header__signout" onClick={signOut}>
+                      {checkAuthStatus() ? 'Sign out' : 'Sign in'}
                     </span>
                   </NavLink>
                 </li>

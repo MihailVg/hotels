@@ -1,10 +1,8 @@
 import { Navigate } from 'react-router-dom';
-import { AuthStatus } from '../../types';
 import { AppRoutes } from '../../types';
-import { getAuthStatus } from '../../utils/utils';
 
 type PrivateRouteProps = {
-  auth: AuthStatus;
+  auth: string | null;
   redirectTo: AppRoutes;
   children: JSX.Element;
 };
@@ -14,7 +12,7 @@ export default function PrivateRoute({
   redirectTo,
   children,
 }: PrivateRouteProps) {
-  const isAuth = getAuthStatus(auth);
+  const isAuth = auth;
 
   return isAuth ? children : <Navigate to={redirectTo} />;
 }
