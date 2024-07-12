@@ -12,11 +12,3 @@ export function getWordEnding(num: number): string {
 export function getAuthStatus(status: AuthStatus): boolean {
   return status === AuthStatus.Auth;
 }
-
-export function checkAuthStatus() {
-  return localStorage.getItem('Auth');
-}
-
-export function clearAuthStatus() {
-  localStorage.clear();
-}

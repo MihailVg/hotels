@@ -3,13 +3,21 @@ import { AppRoutes } from '../../types';
 import Header from '../../components/header/header';
 import { Helmet } from 'react-helmet-async';
 import { CITY_NAME, LOGIN_VALUE, PASSWORD_VALUE } from './login-page.consts';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { useAuthStatus } from '../../context/auth';
 
 export default function LoginPage() {
+  const { isLogged, loginAction } = useAuthStatus();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const isValid = login === LOGIN_VALUE && password === PASSWORD_VALUE;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate(AppRoutes.Main);
+    }
+  }, [isLogged, navigate]);
 
   function handleLoginChange(evt: ChangeEvent<HTMLInputElement>) {
     setLogin(evt.target.value);
@@ -22,11 +30,11 @@ export default function LoginPage() {
   function handleSubmit(evt: FormEvent) {
     evt.preventDefault();
 
-    if(isValid) {
-      console.log([login, password]);
-      navigate('/');
-      localStorage.setItem('Auth', 'true');
+    if (isValid) {
+      loginAction();
+      navigate(AppRoutes.Main);
     } else {
+      // eslint-disable-next-line no-alert
       alert('something wrong!');
     }
   }
