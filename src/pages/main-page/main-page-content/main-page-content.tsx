@@ -2,14 +2,14 @@ import { useState } from 'react';
 import OffersList from '../../../components/offer-list/offers-list';
 import Sorting from '../../../components/sorting/sorting';
 import { OfferType } from '../../../types';
-import MapApp from '../../../components/map/map';
+import MapApp from '../../../components/map/map-app';
 
 type MainPageContentProps = {
   offers: OfferType[];
 };
 
 export default function MainPageContent({ offers }: MainPageContentProps) {
-  const [activeOffer, setActiveOffer] = useState <OfferType | null>(null);
+  const [activeOffer, setActiveOffer] = useState<OfferType | null>(null);
   // eslint-disable-next-line no-console
   console.log(activeOffer);
 
@@ -23,7 +23,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
               {offers.length} places to stay in Amsterdam
             </b>
             <Sorting />
-            <OffersList offers={offers} onActiveOffer={setActiveOffer}/>
+            <OffersList offers={offers} onActiveOffer={setActiveOffer} />
           </section>
         ) : (
           <section className="cities__no-places">
@@ -37,7 +37,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
           </section>
         )}
         <div className="cities__right-section">
-          <MapApp activeOffer={activeOffer} mapClass='cities__map'/>
+          <MapApp activeOffer={activeOffer} mapClass="cities__map" />
         </div>
       </div>
     </div>

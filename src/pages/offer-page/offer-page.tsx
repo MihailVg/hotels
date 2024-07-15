@@ -1,14 +1,15 @@
 import Header from '../../components/header/header';
 import { OfferType, ReviewType } from '../../types';
-import {
-  getRatingPercent,
-  getWordEnding,
-} from '../../utils/utils';
+import { getRatingPercent, getWordEnding } from '../../utils/utils';
 import { CARD_CLASS_NAME_NEAR, CARD_CLASS_NAME_NEAR_IMG } from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
 import { Helmet } from 'react-helmet-async';
-import Map from '../../components/map/map';
-import { MAX_IMG_LENGTH, MAX_NEAR_PLACES, MIN_IMG_LENGTH } from './offer-page.consts';
+import Map from '../../components/map/map-app';
+import {
+  MAX_IMG_LENGTH,
+  MAX_NEAR_PLACES,
+  MIN_IMG_LENGTH,
+} from './offer-page.consts';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { useParams } from 'react-router-dom';
 import ReviewsSection from '../../components/reviews-section/reviews-section';
@@ -16,10 +17,14 @@ import ReviewsSection from '../../components/reviews-section/reviews-section';
 type OfferPageProps = {
   offers: OfferType[];
   reviews: ReviewType[];
-  setComments: (comment : (prev: ReviewType[]) => ReviewType[]) => void;
+  setComments: (comment: (prev: ReviewType[]) => ReviewType[]) => void;
 };
 
-export default function OfferPage({ reviews, setComments, offers }: OfferPageProps) {
+export default function OfferPage({
+  reviews,
+  setComments,
+  offers,
+}: OfferPageProps) {
   const { id } = useParams();
   const offer = offers.find((someOffer) => someOffer.id === id);
 
@@ -27,7 +32,9 @@ export default function OfferPage({ reviews, setComments, offers }: OfferPagePro
     return <NotFoundPage />;
   }
 
-  const nearOffers = offers.filter((item, i) => (i < MAX_NEAR_PLACES ? item : null));
+  const nearOffers = offers.filter((item, i) =>
+    i < MAX_NEAR_PLACES ? item : null
+  );
 
   const {
     isPremium,
@@ -55,15 +62,16 @@ export default function OfferPage({ reviews, setComments, offers }: OfferPagePro
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {images.slice(MIN_IMG_LENGTH, MAX_IMG_LENGTH).map((image, index) => (
-                <div key={`${image + index}`} className="offer__image-wrapper">
-                  <img
-                    className="offer__image"
-                    src={image}
-                    alt={title}
-                  />
-                </div>
-              ))}
+              {images
+                .slice(MIN_IMG_LENGTH, MAX_IMG_LENGTH)
+                .map((image, index) => (
+                  <div
+                    key={`${image + index}`}
+                    className="offer__image-wrapper"
+                  >
+                    <img className="offer__image" src={image} alt={title} />
+                  </div>
+                ))}
             </div>
           </div>
           <div className="offer__container container">
@@ -140,7 +148,7 @@ export default function OfferPage({ reviews, setComments, offers }: OfferPagePro
               <ReviewsSection reviews={reviews} setComments={setComments} />
             </div>
           </div>
-          <Map activeOffer={offer} mapClass='offer__map'/>
+          <Map activeOffer={offer} mapClass="offer__map" />
         </section>
         <div className="container">
           <section className="near-places places">

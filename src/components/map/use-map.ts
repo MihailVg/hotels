@@ -39,6 +39,5 @@ export default function useMap({mapRef, city, selectedPoint} : UseMapProps) {
     }
   }, [mapRef, city, selectedPoint]);
 
-  console.log(map);
   return map;
 }
