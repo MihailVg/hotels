@@ -140,7 +140,7 @@ export default function OfferPage({ reviews, setComments, offers }: OfferPagePro
               <ReviewsSection reviews={reviews} setComments={setComments} />
             </div>
           </div>
-          <Map className="offer__map" />
+          <Map activeOffer={offer} mapClass='offer__map'/>
         </section>
         <div className="container">
           <section className="near-places places">

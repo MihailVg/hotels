@@ -6,9 +6,10 @@ import { CityType, LocationType } from '../../types';
 type UseMapProps = {
   mapRef: React.MutableRefObject<null>;
   city: CityType;
+  selectedPoint: LocationType | null;
 }
 
-export default function useMap({mapRef, city} : UseMapProps) {
+export default function useMap({mapRef, city, selectedPoint} : UseMapProps) {
   const [map, setMap] = useState(null);
   const isRenderedRef = useRef(false);
 
@@ -16,10 +17,10 @@ export default function useMap({mapRef, city} : UseMapProps) {
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef.current, {
         center: {
-          lat: city.location.latitude,
-          lng: city.location.longitude,
+          lat: selectedPoint ? selectedPoint.latitude : city.location.latitude,
+          lng: selectedPoint ? selectedPoint.longitude : city.location.longitude,
         },
-        zoom: city.location.zoom,
+        zoom: selectedPoint ? selectedPoint.zoom : city.location.zoom,
       });
 
       leaflet
@@ -36,7 +37,7 @@ export default function useMap({mapRef, city} : UseMapProps) {
 
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [mapRef, city, selectedPoint]);
 
   console.log(map);
   return map;

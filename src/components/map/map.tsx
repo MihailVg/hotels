@@ -27,11 +27,12 @@ type MapProps = {
   city: CityType;
   points: LocationType[];
   selectedPoint: LocationType | null;
+  mapClass?: string;
 };
 
-function Map({ city, points, selectedPoint }: MapProps) {
+function Map({ city, points, selectedPoint, mapClass }: MapProps) {
   const mapRef = useRef(null);
-  const map = useMap({ mapRef, city });
+  const map = useMap({ mapRef, city, selectedPoint });
 
   const defaultCustomIcon = leaflet.icon({
     iconUrl: URL_MARKER_DEFAULT,
@@ -66,21 +67,15 @@ function Map({ city, points, selectedPoint }: MapProps) {
     }
   }, [map, points, defaultCustomIcon, currentCustomIcon, selectedPoint]);
 
-  return (
-    <div
-      className="cities__map map"
-      style={{ height: '520px', width: '520px' }}
-      ref={mapRef}
-      // eslint-disable-next-line react/jsx-closing-tag-location
-    ></div>
-  );
+  return <div className={`${mapClass} map`} ref={mapRef}></div>;
 }
 
 type MapAppProps = {
   activeOffer: OfferType | null;
+  mapClass?: string;
 };
 
-export default function MapApp({ activeOffer }: MapAppProps) {
+export default function MapApp({ activeOffer, mapClass }: MapAppProps) {
   const [selectedPoint, setSelectedPoint] = useState<LocationType | null>(null);
 
   useEffect(() => {
@@ -95,7 +90,14 @@ export default function MapApp({ activeOffer }: MapAppProps) {
     }
   }, [activeOffer]);
 
-  return <Map city={CITY} points={POINTS} selectedPoint={selectedPoint} />;
+  return (
+    <Map
+      city={CITY}
+      points={POINTS}
+      selectedPoint={selectedPoint}
+      mapClass={mapClass}
+    />
+  );
 }
 
 // type MapProps = {

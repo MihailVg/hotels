@@ -37,7 +37,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
           </section>
         )}
         <div className="cities__right-section">
-          <MapApp activeOffer={activeOffer} />
+          <MapApp activeOffer={activeOffer} mapClass='cities__map'/>
         </div>
       </div>
     </div>
