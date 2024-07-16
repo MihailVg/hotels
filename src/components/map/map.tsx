@@ -1,62 +1,42 @@
-import { useEffect, useRef } from 'react';
-import useMap from './use-map';
-import { CityType, LocationType } from '../../types';
-import leaflet from 'leaflet';
-
-const URL_MARKER_DEFAULT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-
-const URL_MARKER_CURRENT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
+import { useEffect, useRef, useState } from 'react';
+import useMap from '../../hooks/use-map';
+import { CityType, OfferType } from '../../types';
 
 type MapProps = {
   city: CityType;
-  points: LocationType[];
-  selectedPoint: LocationType | null;
+  points: OfferType[];
+  activeOffer?: OfferType | null;
   mapClass?: string;
 };
 
-export default function Map({
-  city,
-  points,
-  selectedPoint,
-  mapClass,
-}: MapProps) {
+export default function Map({ city, points, activeOffer, mapClass }: MapProps) {
   const mapRef = useRef(null);
-  const map = useMap({ mapRef, city, selectedPoint });
-
-  const defaultCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_DEFAULT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
-  const currentCustomIcon = leaflet.icon({
-    iconUrl: URL_MARKER_CURRENT,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
+  const [selectedPoint, setSelectedPoint] = useState<OfferType | null>(null);
+  const map = useMap({ mapRef, city, selectedPoint, points });
 
   useEffect(() => {
-    if (map) {
-      points.forEach((item) => {
-        leaflet
-          .marker(
-            {
-              lat: item.latitude,
-              lng: item.longitude,
-            },
-            {
-              icon:
-                item.latitude === selectedPoint?.latitude
-                  ? currentCustomIcon
-                  : defaultCustomIcon,
-            }
-          )
-          .addTo(map);
-      });
+    const currentPoint = points.find(
+      (point) => point.location.latitude === activeOffer?.location.latitude
+    );
+
+    if (currentPoint) {
+      setSelectedPoint(currentPoint);
+    } else {
+      setSelectedPoint(null);
     }
-  }, [map, points, defaultCustomIcon, currentCustomIcon, selectedPoint]);
+
+    if (selectedPoint) {
+      map?.flyTo(
+        [selectedPoint.location.latitude, selectedPoint.location.longitude],
+        selectedPoint.location.zoom
+      );
+    } else {
+      map?.flyTo(
+        [city.location.latitude, city.location.longitude],
+        city.location.zoom
+      );
+    }
+  }, [activeOffer, points, selectedPoint, city, map]);
 
   return <div className={`${mapClass} map`} ref={mapRef}></div>;
 }

@@ -2,7 +2,8 @@ import { useState } from 'react';
 import OffersList from '../../../components/offer-list/offers-list';
 import Sorting from '../../../components/sorting/sorting';
 import { OfferType } from '../../../types';
-import MapApp from '../../../components/map/map-app';
+import { CITIES_ARRAY } from '../../../const';
+import Map from '../../../components/map/map';
 
 type MainPageContentProps = {
   offers: OfferType[];
@@ -10,6 +11,9 @@ type MainPageContentProps = {
 
 export default function MainPageContent({ offers }: MainPageContentProps) {
   const [activeOffer, setActiveOffer] = useState<OfferType | null>(null);
+  const amsterdamOffers = offers.filter(
+    (offer) => offer.city.name === CITIES_ARRAY[3]
+  );
   // eslint-disable-next-line no-console
   console.log(activeOffer);
 
@@ -23,7 +27,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
               {offers.length} places to stay in Amsterdam
             </b>
             <Sorting />
-            <OffersList offers={offers} onActiveOffer={setActiveOffer} />
+            <OffersList offers={amsterdamOffers} onActiveOffer={setActiveOffer} />
           </section>
         ) : (
           <section className="cities__no-places">
@@ -37,7 +41,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
           </section>
         )}
         <div className="cities__right-section">
-          <MapApp activeOffer={activeOffer} mapClass="cities__map" />
+          <Map activeOffer={activeOffer} city={amsterdamOffers[0].city} points={amsterdamOffers} mapClass="cities__map" />
         </div>
       </div>
     </div>

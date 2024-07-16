@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { AppRoutes } from '../../types';
 import { OfferType } from '../../types';
-import { getRatingPercent } from '../../utils/utils';
+import { changeOfferPageId, getRatingPercent } from '../../utils/utils';
 
 type OfferCardProps = {
   offer: OfferType;
@@ -23,7 +22,7 @@ export default function OfferCard({
   const { isPremium, previewImage, price, title, rating, type, id } = offer;
   const articleClassName = `${cardClassName} place-card`;
   const imageClassName = `${imgClassName} place-card__image-wrapper`;
-  const path = AppRoutes.Offer.replace(':id', id);
+  const path = changeOfferPageId(id);
 
   return (
     <article

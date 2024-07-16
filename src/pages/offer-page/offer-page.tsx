@@ -1,10 +1,14 @@
 import Header from '../../components/header/header';
 import { OfferType, ReviewType } from '../../types';
 import { getRatingPercent, getWordEnding } from '../../utils/utils';
-import { CARD_CLASS_NAME_NEAR, CARD_CLASS_NAME_NEAR_IMG } from '../../const';
+import {
+  CARD_CLASS_NAME_NEAR,
+  CARD_CLASS_NAME_NEAR_IMG,
+  CITIES_ARRAY,
+} from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
 import { Helmet } from 'react-helmet-async';
-import Map from '../../components/map/map-app';
+import Map from '../../components/map/map';
 import {
   MAX_IMG_LENGTH,
   MAX_NEAR_PLACES,
@@ -27,6 +31,10 @@ export default function OfferPage({
 }: OfferPageProps) {
   const { id } = useParams();
   const offer = offers.find((someOffer) => someOffer.id === id);
+
+  const amsterdamOffers = offers.filter(
+    (item) => item.city.name === CITIES_ARRAY[3]
+  );
 
   if (!offer) {
     return <NotFoundPage />;
@@ -148,7 +156,12 @@ export default function OfferPage({
               <ReviewsSection reviews={reviews} setComments={setComments} />
             </div>
           </div>
-          <Map activeOffer={offer} mapClass="offer__map" />
+          <Map
+            activeOffer={offer}
+            mapClass="offer__map"
+            points={amsterdamOffers}
+            city={amsterdamOffers[0].city}
+          />
         </section>
         <div className="container">
           <section className="near-places places">
