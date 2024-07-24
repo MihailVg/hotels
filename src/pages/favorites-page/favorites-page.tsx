@@ -46,10 +46,6 @@ export default function FavoritesPage({ offers }: FavoritesPageProps) {
                         <OfferCard
                           key={offer.id}
                           offer={offer}
-                          cardClassName="favorites__card"
-                          imgClassName="favorites__image-wrapper"
-                          imgWidth="150"
-                          imgHeight="110"
                         />
                       ))}
                     </div>

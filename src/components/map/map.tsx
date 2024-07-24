@@ -1,15 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import useMap from '../../hooks/use-map';
+import useMap from '../../hooks/use-map/use-map';
 import { CityType, OfferType } from '../../types';
 
 type MapProps = {
   city: CityType;
   points: OfferType[];
   activeOffer?: OfferType | null;
-  mapClass?: string;
+  className?: string;
 };
 
-export default function Map({ city, points, activeOffer, mapClass }: MapProps) {
+export default function Map({
+  city,
+  points,
+  activeOffer,
+  className,
+}: MapProps) {
   const mapRef = useRef(null);
   const [selectedPoint, setSelectedPoint] = useState<OfferType | null>(null);
   const map = useMap({ mapRef, city, selectedPoint, points });
@@ -38,5 +43,5 @@ export default function Map({ city, points, activeOffer, mapClass }: MapProps) {
     }
   }, [activeOffer, points, selectedPoint, city, map]);
 
-  return <div className={`${mapClass} map`} ref={mapRef}></div>;
+  return <div className={`${className} map`} ref={mapRef}></div>;
 }

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import OffersList from '../../../components/offer-list/offers-list';
 import Sorting from '../../../components/sorting/sorting';
 import { OfferType } from '../../../types';
-import { CITIES_ARRAY } from '../../../const';
 import Map from '../../../components/map/map';
+import { useAppSelector } from '../../../hooks/redux-hooks/redux-hooks';
 
 type MainPageContentProps = {
   offers: OfferType[];
@@ -11,9 +11,8 @@ type MainPageContentProps = {
 
 export default function MainPageContent({ offers }: MainPageContentProps) {
   const [activeOffer, setActiveOffer] = useState<OfferType | null>(null);
-  const amsterdamOffers = offers.filter(
-    (offer) => offer.city.name === CITIES_ARRAY[3]
-  );
+  const currentOffers = useAppSelector((state) => state.offers);
+  const currentCity = useAppSelector((state) => state.currentCity);
   // eslint-disable-next-line no-console
   console.log(activeOffer);
 
@@ -24,10 +23,10 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
           <section className="cities__places places">
             <h2 className="visually-hidden">Places</h2>
             <b className="places__found">
-              {offers.length} places to stay in Amsterdam
+              {currentOffers.length} places to stay in {currentCity}
             </b>
             <Sorting />
-            <OffersList offers={amsterdamOffers} onActiveOffer={setActiveOffer} />
+            <OffersList offers={currentOffers} onActiveOffer={setActiveOffer} />
           </section>
         ) : (
           <section className="cities__no-places">
@@ -41,7 +40,7 @@ export default function MainPageContent({ offers }: MainPageContentProps) {
           </section>
         )}
         <div className="cities__right-section">
-          <Map activeOffer={activeOffer} city={amsterdamOffers[0].city} points={amsterdamOffers} mapClass="cities__map" />
+          <Map activeOffer={activeOffer} city={currentOffers[0].city} points={currentOffers} className="cities__map" />
         </div>
       </div>
     </div>

@@ -1,14 +1,14 @@
 import leaflet, { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
-import { CityType, OfferType } from '../types';
+import { CityType, OfferType } from '../../types';
 import {
   currentCustomIcon,
   defaultCustomIcon,
   TileLayerOptions,
-} from '../components/map/map.consts';
+} from '../../components/map/map.consts';
 import { useNavigate } from 'react-router-dom';
-import { changeOfferPageId } from '../utils/utils';
+import { changeOfferPageId } from '../../utils/utils';
 
 type UseMapProps = {
   mapRef: React.MutableRefObject<null>;

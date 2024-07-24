@@ -2,8 +2,6 @@ import Header from '../../components/header/header';
 import { OfferType, ReviewType } from '../../types';
 import { getRatingPercent, getWordEnding } from '../../utils/utils';
 import {
-  CARD_CLASS_NAME_NEAR,
-  CARD_CLASS_NAME_NEAR_IMG,
   CITIES_ARRAY,
 } from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
@@ -158,7 +156,7 @@ export default function OfferPage({
           </div>
           <Map
             activeOffer={offer}
-            mapClass="offer__map"
+            className="offer__map"
             points={amsterdamOffers}
             city={amsterdamOffers[0].city}
           />
@@ -173,8 +171,6 @@ export default function OfferPage({
                 <OfferCard
                   key={item.id}
                   offer={item}
-                  cardClassName={CARD_CLASS_NAME_NEAR}
-                  imgClassName={CARD_CLASS_NAME_NEAR_IMG}
                 />
               ))}
             </div>

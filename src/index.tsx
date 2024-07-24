@@ -5,6 +5,8 @@ import { offersData } from './mocks/offers.data';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/auth';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,7 +17,9 @@ root.render(
     <BrowserRouter>
       <React.StrictMode>
         <AuthProvider>
-          <App offers={offersData} />
+          <Provider store={store}>
+            <App offers={offersData} />
+          </Provider>
         </AuthProvider>
       </React.StrictMode>
     </BrowserRouter>

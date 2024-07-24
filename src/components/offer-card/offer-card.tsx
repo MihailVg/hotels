@@ -1,32 +1,42 @@
-import { Link } from 'react-router-dom';
-import { OfferType } from '../../types';
+import { Link, useLocation } from 'react-router-dom';
+import { AppRoutes, OfferType } from '../../types';
 import { changeOfferPageId, getRatingPercent } from '../../utils/utils';
+import classNames from 'classnames';
 
 type OfferCardProps = {
   offer: OfferType;
-  cardClassName?: string;
-  imgClassName?: string;
-  imgWidth?: string;
-  imgHeight?: string;
   onActiveOffer?: (offer: OfferType | null) => void;
 };
 
 export default function OfferCard({
   offer,
-  cardClassName,
-  imgClassName,
-  imgWidth,
-  imgHeight,
   onActiveOffer,
 }: OfferCardProps) {
   const { isPremium, previewImage, price, title, rating, type, id } = offer;
-  const articleClassName = `${cardClassName} place-card`;
-  const imageClassName = `${imgClassName} place-card__image-wrapper`;
   const path = changeOfferPageId(id);
+
+  const { pathname } = useLocation();
+  const favoritesPath: string = AppRoutes.Favorites;
+  const mainPath: string = AppRoutes.Main;
+  const imageSizeOffer = {
+    favorites: { width: '150', height: '110' },
+    cities: { width: '260', height: '200' },
+  };
+  const imageSizeOfferType =
+    pathname === favoritesPath
+      ? imageSizeOffer.favorites
+      : imageSizeOffer.cities;
 
   return (
     <article
-      className={articleClassName}
+      className={classNames(
+        'place-card',
+        {
+          'favorites__card': pathname === favoritesPath,
+          'cities__card': pathname === mainPath,
+          'near-places__card': pathname !== mainPath && pathname !== favoritesPath
+        }
+      )}
       onMouseOver={() => onActiveOffer?.(offer)}
       onMouseLeave={() => onActiveOffer?.(null)}
     >
@@ -35,13 +45,20 @@ export default function OfferCard({
           <span>Premium</span>
         </div>
       )}
-      <div className={imageClassName}>
+      <div className={classNames(
+        'place-card__image-wrapper',
+        {
+          'favorites__image-wrapper': pathname === favoritesPath,
+          'cities__image-wrapper': pathname === mainPath,
+          'near-places__image-wrapper': pathname !== mainPath && pathname !== favoritesPath
+        }
+      )}
+      >
         <Link to={path}>
           <img
             className="place-card__image"
             src={previewImage}
-            width={imgWidth || '260'}
-            height={imgHeight || '200'}
+            {...imageSizeOfferType}
             alt="Place image"
           />
         </Link>
