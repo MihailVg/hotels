@@ -7,21 +7,24 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/auth';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { fetchOffersAction } from './store/api-actions';
+
+store.dispatch(fetchOffersAction());
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <React.StrictMode>
-        <AuthProvider>
-          <Provider store={store}>
+  <React.StrictMode>
+    <Provider store={store}>
+      <HelmetProvider>
+        <BrowserRouter>
+          <AuthProvider>
             <App offers={offersData} />
-          </Provider>
-        </AuthProvider>
-      </React.StrictMode>
-    </BrowserRouter>
-  </HelmetProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </HelmetProvider>
+    </Provider>
+  </React.StrictMode>
 );

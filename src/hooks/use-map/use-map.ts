@@ -1,7 +1,7 @@
 import leaflet, { Map } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef, useState } from 'react';
-import { CityType, OfferType } from '../../types';
+import { CityType, PreviewOfferType } from '../../types';
 import {
   currentCustomIcon,
   defaultCustomIcon,
@@ -13,8 +13,8 @@ import { changeOfferPageId } from '../../utils/utils';
 type UseMapProps = {
   mapRef: React.MutableRefObject<null>;
   city: CityType;
-  selectedPoint: OfferType | null;
-  points: OfferType[];
+  selectedPoint: PreviewOfferType | null;
+  points: PreviewOfferType[];
 };
 
 export default function useMap({

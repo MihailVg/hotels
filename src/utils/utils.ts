@@ -16,3 +16,14 @@ export function getAuthStatus(status: AuthStatus): boolean {
 export function changeOfferPageId(id: string) {
   return AppRoutes.Offer.replace(':id', id);
 }
+
+export function debounce<T extends (...args: unknown[]) => void>(fn : T, t: number) : ((...args : Parameters<T>) => void) {
+  let timeoutId : ReturnType<typeof setTimeout>;
+
+  return function (...args : Parameters<T>) : void {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      fn(args);
+    }, t);
+  };
+}

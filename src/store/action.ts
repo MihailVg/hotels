@@ -1,20 +1,19 @@
 import { createAction } from '@reduxjs/toolkit';
-import { CHANGE_CITY, CHANGE_SORT } from './redux.consts';
+import { CHANGE_SORT } from './redux.consts';
+import { CityNamesType } from '../types/city-names.type';
+import { NameSpace } from '../const';
+import { OfferType, PreviewOfferType } from '../types';
 
-// eslint-disable-next-line prefer-arrow-callback
-export const changeCity = createAction(CHANGE_CITY, function prepare(index: number) {
-  return {
-    payload: {
-      index: index,
-    }
-  };
-});
+export const changeCity = createAction<{ city: CityNamesType }>(
+  `${NameSpace.Offers}/setActiveCity`
+);
 
-// eslint-disable-next-line prefer-arrow-callback
-export const changeSort = createAction(CHANGE_SORT, function prepare(sorting: string) {
-  return {
-    payload: {
-      sortingType: sorting,
-    }
-  };
-});
+export const loadOffers = createAction<PreviewOfferType[]>(`${NameSpace.Offers}/loadOffers`);
+export const loadOffer = createAction<OfferType | null>(`${NameSpace.Offer}/loadOffer`);
+export const setOffersLoadingStatus = createAction<boolean>(`${NameSpace.Offers}/setOffersLoadingStatus`);
+
+export const changeSort = createAction(CHANGE_SORT, (sorting: string) => ({
+  payload: {
+    sortingType: sorting,
+  },
+}));

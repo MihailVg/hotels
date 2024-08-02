@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
-import { AppRoutes, OfferType } from '../../types';
+import { AppRoutes, PreviewOfferType } from '../../types';
 import { changeOfferPageId, getRatingPercent } from '../../utils/utils';
 import classNames from 'classnames';
 
 type OfferCardProps = {
-  offer: OfferType;
-  onActiveOffer?: (offer: OfferType | null) => void;
+  offer: PreviewOfferType;
+  onActiveOffer?: (offer: PreviewOfferType | null) => void;
 };
 
 export default function OfferCard({
@@ -27,6 +27,14 @@ export default function OfferCard({
       ? imageSizeOffer.favorites
       : imageSizeOffer.cities;
 
+  const mouseOverHandler = () => {
+    onActiveOffer?.(offer);
+  };
+
+  const mouseLeaveHandler = () => {
+    onActiveOffer?.(null);
+  };
+
   return (
     <article
       className={classNames(
@@ -37,8 +45,8 @@ export default function OfferCard({
           'near-places__card': pathname !== mainPath && pathname !== favoritesPath
         }
       )}
-      onMouseOver={() => onActiveOffer?.(offer)}
-      onMouseLeave={() => onActiveOffer?.(null)}
+      onMouseOver={() => mouseOverHandler()}
+      onMouseLeave={() => mouseLeaveHandler()}
     >
       {isPremium && (
         <div className="place-card__mark">

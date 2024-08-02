@@ -1,9 +1,6 @@
 import Header from '../../components/header/header';
-import { OfferType, ReviewType } from '../../types';
+import { ReviewType } from '../../types';
 import { getRatingPercent, getWordEnding } from '../../utils/utils';
-import {
-  CITIES_ARRAY,
-} from '../../const';
 import OfferCard from '../../components/offer-card/offer-card';
 import { Helmet } from 'react-helmet-async';
 import Map from '../../components/map/map';
@@ -15,9 +12,11 @@ import {
 import NotFoundPage from '../not-found-page/not-found-page';
 import { useParams } from 'react-router-dom';
 import ReviewsSection from '../../components/reviews-section/reviews-section';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { fetchOfferAction } from '../../store/api-actions';
+import { useEffect } from 'react';
 
 type OfferPageProps = {
-  offers: OfferType[];
   reviews: ReviewType[];
   setComments: (comment: (prev: ReviewType[]) => ReviewType[]) => void;
 };
@@ -25,14 +24,14 @@ type OfferPageProps = {
 export default function OfferPage({
   reviews,
   setComments,
-  offers,
 }: OfferPageProps) {
+  const dispatch = useAppDispatch();
   const { id } = useParams();
-  const offer = offers.find((someOffer) => someOffer.id === id);
-
-  const amsterdamOffers = offers.filter(
-    (item) => item.city.name === CITIES_ARRAY[3]
-  );
+  const offers = useAppSelector((state) => state.offers);
+  const offer = useAppSelector((state) => state.currentOffer);
+  useEffect(() => {
+    dispatch(fetchOfferAction(id));
+  }, [dispatch, id]);
 
   if (!offer) {
     return <NotFoundPage />;
@@ -157,8 +156,7 @@ export default function OfferPage({
           <Map
             activeOffer={offer}
             className="offer__map"
-            points={amsterdamOffers}
-            city={amsterdamOffers[0].city}
+            points={offers}
           />
         </section>
         <div className="container">

@@ -1,25 +1,27 @@
 import classNames from 'classnames';
 import { CITIES_ARRAY } from '../../const';
 import cls from './location-tabs.module.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
-import { changeCity, changeSort } from '../../store/action';
+import { CityNamesType } from '../../types/city-names.type';
 
-export default function LocationsTabs() {
-  const activeCity = useAppSelector((state) => state.currentCity);
-  const dispatch = useAppDispatch();
-  const sortingType = useAppSelector((state) => state.sorting);
+type LocationsTabsProps = {
+  activeCity: CityNamesType;
+  onActiveCity: (city: CityNamesType) => void;
+};
 
-  const clickHandler = (index: number) => {
-    dispatch(changeCity(index));
-    dispatch(changeSort(sortingType));
-  };
+export default function LocationsTabs({
+  activeCity,
+  onActiveCity,
+}: LocationsTabsProps) {
 
   return (
     <div className="tabs">
       <section className="locations container">
         <ul className="locations__list tabs__list">
-          {CITIES_ARRAY.map((item, index) => (
-            <li key={item} className="locations__item" onClick={() => clickHandler(index)}>
+          {CITIES_ARRAY.map((item) => (
+            <li
+              key={item}
+              className="locations__item"
+            >
               <button
                 className={classNames(
                   `locations__item-link ${cls.button} tabs__item`,
@@ -27,6 +29,7 @@ export default function LocationsTabs() {
                     'tabs__item--active': item === activeCity,
                   }
                 )}
+                onClick={() => onActiveCity(item)}
               >
                 <span>{item}</span>
               </button>

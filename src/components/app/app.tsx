@@ -9,6 +9,8 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import { reviewsData } from '../../mocks/reviews.data';
 import { useState } from 'react';
 import { useAuthStatus } from '../../context/auth';
+import { useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import Spinner from '../spinner/spinner';
 
 type AppProps = {
   offers: OfferType[];
@@ -16,13 +18,16 @@ type AppProps = {
 
 function App({ offers }: AppProps): JSX.Element {
   const { isLogged } = useAuthStatus();
-  const [reviews, setComments] = useState<ReviewType[]>(reviewsData);
-  // eslint-disable-next-line no-console
-  console.log(reviews);
+  const [, setComments] = useState<ReviewType[]>(reviewsData);
+  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+
+  if (isOfferLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Routes>
-      <Route path={AppRoutes.Main} element={<MainPage offers={offers} />} />
+      <Route path={AppRoutes.Main} element={<MainPage />} />
       <Route path={AppRoutes.Login} element={<LoginPage />} />
       <Route
         path={AppRoutes.Offer}
@@ -30,7 +35,6 @@ function App({ offers }: AppProps): JSX.Element {
           <OfferPage
             reviews={reviewsData}
             setComments={setComments}
-            offers={offers}
           />
         }
       />
