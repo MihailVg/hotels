@@ -1,5 +1,4 @@
 import Header from '../../components/header/header';
-import { ReviewType } from '../../types';
 import { getRatingPercent, getWordEnding } from '../../utils/utils';
 import OfferCard from '../../components/offer-card/offer-card';
 import { Helmet } from 'react-helmet-async';
@@ -12,34 +11,34 @@ import {
 import NotFoundPage from '../not-found-page/not-found-page';
 import { useParams } from 'react-router-dom';
 import ReviewsSection from '../../components/reviews-section/reviews-section';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
-import { fetchOfferAction } from '../../store/api-actions';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../hooks/redux-hooks/redux-hooks';
+import {
+  fetchNearOffersAction,
+  fetchOfferAction,
+  fetchReviews,
+} from '../../store/api-actions';
 import { useEffect } from 'react';
 
-type OfferPageProps = {
-  reviews: ReviewType[];
-  setComments: (comment: (prev: ReviewType[]) => ReviewType[]) => void;
-};
-
-export default function OfferPage({
-  reviews,
-  setComments,
-}: OfferPageProps) {
+export default function OfferPage() {
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const offers = useAppSelector((state) => state.offers);
   const offer = useAppSelector((state) => state.currentOffer);
+  const nearOffers = useAppSelector((state) => state.nearOffers);
+  const reviews = useAppSelector((state) => state.reviews);
   useEffect(() => {
+    dispatch(fetchReviews(id));
+    dispatch(fetchNearOffersAction(id));
     dispatch(fetchOfferAction(id));
+    window.scrollTo(0, 0);
   }, [dispatch, id]);
 
   if (!offer) {
     return <NotFoundPage />;
   }
-
-  const nearOffers = offers.filter((item, i) =>
-    i < MAX_NEAR_PLACES ? item : null
-  );
 
   const {
     isPremium,
@@ -150,14 +149,10 @@ export default function OfferPage({
                   <p className="offer__text">{description}</p>
                 </div>
               </div>
-              <ReviewsSection reviews={reviews} setComments={setComments} />
+              <ReviewsSection reviews={reviews} />
             </div>
           </div>
-          <Map
-            activeOffer={offer}
-            className="offer__map"
-            points={offers}
-          />
+          <Map activeOffer={offer} className="offer__map" points={offers} />
         </section>
         <div className="container">
           <section className="near-places places">
@@ -165,12 +160,11 @@ export default function OfferPage({
               Other places in the neighbourhood
             </h2>
             <div className="near-places__list places__list">
-              {nearOffers.map((item) => (
-                <OfferCard
-                  key={item.id}
-                  offer={item}
-                />
-              ))}
+              {nearOffers && nearOffers.map((item, index) =>
+                index > MAX_NEAR_PLACES ? null : (
+                  <OfferCard key={item.id} offer={item} />
+                )
+              )}
             </div>
           </section>
         </div>

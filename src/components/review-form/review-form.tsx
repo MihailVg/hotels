@@ -1,12 +1,7 @@
 import { ChangeEvent, FormEvent, Fragment, useState } from 'react';
-import { ReviewType } from '../../types';
 import { STARS_AMOUNT } from './review-form.consts';
 
-type ReviewFormProps = {
-  setComments: (comment: (prev: ReviewType[]) => ReviewType[]) => void;
-};
-
-export default function ReviewForm({ setComments }: ReviewFormProps) {
+export default function ReviewForm() {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [id, setId] = useState(3);
@@ -23,20 +18,20 @@ export default function ReviewForm({ setComments }: ReviewFormProps) {
     if (isValid) {
       setId(id + 1);
 
-      setComments((prev) => [
-        ...prev,
-        {
-          id: `${id}`,
-          user: {
-            isPro: false,
-            name: 'Test',
-            avatarUrl: '../../img/avatar-max.jpg',
-          },
-          rating: rating,
-          comment: comment,
-          date: new Date().toISOString(),
-        },
-      ]);
+      // setComments((prev) => [
+      //   ...prev,
+      //   {
+      //     id: `${id}`,
+      //     user: {
+      //       isPro: false,
+      //       name: 'Test',
+      //       avatarUrl: '../../img/avatar-max.jpg',
+      //     },
+      //     rating: rating,
+      //     comment: comment,
+      //     date: new Date().toISOString(),
+      //   },
+      // ]);
     }
     setComment('');
   };

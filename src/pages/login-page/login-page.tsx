@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet-async';
 import { CITY_NAME, LOGIN_VALUE, PASSWORD_VALUE } from './login-page.consts';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAuthStatus } from '../../context/auth';
+import { useAppDispatch } from '../../hooks/redux-hooks/redux-hooks';
+import { fetchLogin } from '../../store/api-actions';
 
 export default function LoginPage() {
   const { isLogged, loginAction } = useAuthStatus();
@@ -12,6 +14,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const isValid = login === LOGIN_VALUE && password === PASSWORD_VALUE;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isLogged) {
@@ -31,6 +34,10 @@ export default function LoginPage() {
     evt.preventDefault();
 
     if (isValid) {
+      dispatch(fetchLogin({
+        'email': login,
+        'password': password,
+      }));
       loginAction();
       navigate(AppRoutes.Main);
     } else {
