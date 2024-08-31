@@ -5,14 +5,14 @@ import {
 } from '../../hooks/redux-hooks/redux-hooks';
 import { SORT_ARRAY } from '../../const';
 import classNames from 'classnames';
-import { changeSort } from '../../store/action';
+import { changeSortAction } from '../../store/action';
 
 export default function Sorting() {
   const [isVisible, setVisible] = useState(false);
   const sortingType = useAppSelector((state) => state.sorting);
   const dispatch = useAppDispatch();
   const clickHandler = (item: string) => {
-    dispatch(changeSort(item));
+    dispatch(changeSortAction(item));
     setVisible(false);
   };
 

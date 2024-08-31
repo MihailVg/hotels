@@ -6,7 +6,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
-import { changeCity } from '../../store/action';
+import { changeCityAction } from '../../store/action';
 
 
 export default function MainPage() {
@@ -30,7 +30,7 @@ export default function MainPage() {
         <h1 className="visually-hidden">Cities</h1>
         <LocationTabs
           activeCity={activeCity}
-          onActiveCity={(city) => dispatch(changeCity({ city }))}
+          onActiveCity={(city) => dispatch(changeCityAction({ city }))}
         />
         <MainPageContent offers={filteredOffersByCity} />
       </main>

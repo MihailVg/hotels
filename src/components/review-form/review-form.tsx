@@ -1,10 +1,15 @@
 import { ChangeEvent, FormEvent, Fragment, useState } from 'react';
 import { STARS_AMOUNT } from './review-form.consts';
+import { useAppDispatch } from '../../hooks/redux-hooks/redux-hooks';
+import { fetchSetReviewAction } from '../../store/api-actions';
+import { useParams } from 'react-router-dom';
 
 export default function ReviewForm() {
+  const [isCommentSend, setIsCommentSend] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [id, setId] = useState(3);
+  const dispatch = useAppDispatch();
+  const { id } = useParams();
   const isValid = rating && comment.length > 50;
   const sortedStars = STARS_AMOUNT.sort((a : number, b: number) => b - a);
 
@@ -15,26 +20,20 @@ export default function ReviewForm() {
   const handleSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
-    if (isValid) {
-      setId(id + 1);
-
-      // setComments((prev) => [
-      //   ...prev,
-      //   {
-      //     id: `${id}`,
-      //     user: {
-      //       isPro: false,
-      //       name: 'Test',
-      //       avatarUrl: '../../img/avatar-max.jpg',
-      //     },
-      //     rating: rating,
-      //     comment: comment,
-      //     date: new Date().toISOString(),
-      //   },
-      // ]);
+    if (isValid && id) {
+      dispatch(fetchSetReviewAction({
+        id: id,
+        comment: comment,
+        rating: rating,
+      }));
+      setIsCommentSend(true);
     }
     setComment('');
   };
+
+  if(isCommentSend) {
+    return null;
+  }
 
   return (
     <form className="reviews__form form" onSubmit={handleSubmit}>

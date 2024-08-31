@@ -2,18 +2,23 @@ import { Link, useLocation } from 'react-router-dom';
 import { AppRoutes, PreviewOfferType } from '../../types';
 import { changeOfferPageId, getRatingPercent } from '../../utils/utils';
 import classNames from 'classnames';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../hooks/redux-hooks/redux-hooks';
+import { fetchSetFavorite } from '../../store/api-actions';
 
 type OfferCardProps = {
   offer: PreviewOfferType;
   onActiveOffer?: (offer: PreviewOfferType | null) => void;
 };
 
-export default function OfferCard({
-  offer,
-  onActiveOffer,
-}: OfferCardProps) {
+export default function OfferCard({ offer, onActiveOffer }: OfferCardProps) {
   const { isPremium, previewImage, price, title, rating, type, id } = offer;
   const path = changeOfferPageId(id);
+  const dispatch = useAppDispatch();
+  const favorites = useAppSelector((state) => state.favorites);
+  const status = favorites?.find((element) => element.id === id) ? 0 : 1;
 
   const { pathname } = useLocation();
   const favoritesPath: string = AppRoutes.Favorites;
@@ -35,16 +40,23 @@ export default function OfferCard({
     onActiveOffer?.(null);
   };
 
+  const clickHandler = () => {
+    dispatch(
+      fetchSetFavorite({
+        offerId: id,
+        status: status,
+      })
+    );
+  };
+
   return (
     <article
-      className={classNames(
-        'place-card',
-        {
-          'favorites__card': pathname === favoritesPath,
-          'cities__card': pathname === mainPath,
-          'near-places__card': pathname !== mainPath && pathname !== favoritesPath
-        }
-      )}
+      className={classNames('place-card', {
+        'favorites__card': pathname === favoritesPath,
+        'cities__card': pathname === mainPath,
+        'near-places__card':
+          pathname !== mainPath && pathname !== favoritesPath,
+      })}
       onMouseOver={() => mouseOverHandler()}
       onMouseLeave={() => mouseLeaveHandler()}
     >
@@ -53,14 +65,13 @@ export default function OfferCard({
           <span>Premium</span>
         </div>
       )}
-      <div className={classNames(
-        'place-card__image-wrapper',
-        {
+      <div
+        className={classNames('place-card__image-wrapper', {
           'favorites__image-wrapper': pathname === favoritesPath,
           'cities__image-wrapper': pathname === mainPath,
-          'near-places__image-wrapper': pathname !== mainPath && pathname !== favoritesPath
-        }
-      )}
+          'near-places__image-wrapper':
+            pathname !== mainPath && pathname !== favoritesPath,
+        })}
       >
         <Link to={path}>
           <img
@@ -77,7 +88,13 @@ export default function OfferCard({
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button
+            className={classNames('place-card__bookmark-button button', {
+              'place-card__bookmark-button--active': !status,
+            })}
+            type="button"
+            onClick={clickHandler}
+          >
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>

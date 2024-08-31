@@ -1,14 +1,22 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppRoutes } from '../../types';
-import { useAuthStatus } from '../../context/auth';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { fetchGetFavorites, fetchLogoutAction } from '../../store/api-actions';
+import { useEffect } from 'react';
 
 export default function Header() {
-  const { isLogged, logoutAction } = useAuthStatus();
   const { pathname } = useLocation();
   const loginPath: string = AppRoutes.Login;
+  const userName = useAppSelector((state) => state.user?.email);
+  const dispatch = useAppDispatch();
+  const isLogged = useAppSelector((state) => state.authStatus);
+  const favorites = useAppSelector((state) => state.favorites);
+  useEffect(() => {
+    dispatch(fetchGetFavorites());
+  }, [dispatch]);
 
   function signOut() {
-    logoutAction();
+    dispatch(fetchLogoutAction());
   }
 
   const getStyleForNavLink = ({
@@ -47,9 +55,9 @@ export default function Header() {
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
                       <span className="header__user-name user__name">
-                        admin@mail.com
+                        {userName}
                       </span>
-                      <span className="header__favorite-count">3</span>
+                      <span className="header__favorite-count">{favorites?.length || 0}</span>
                     </NavLink>
                   )}
                 </li>

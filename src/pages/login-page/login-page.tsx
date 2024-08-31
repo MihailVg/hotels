@@ -2,25 +2,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../../types';
 import Header from '../../components/header/header';
 import { Helmet } from 'react-helmet-async';
-import { CITY_NAME, LOGIN_VALUE, PASSWORD_VALUE } from './login-page.consts';
+import { CITY_NAME } from './login-page.consts';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useAuthStatus } from '../../context/auth';
-import { useAppDispatch } from '../../hooks/redux-hooks/redux-hooks';
-import { fetchLogin } from '../../store/api-actions';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { fetchLoginAction } from '../../store/api-actions';
 
 export default function LoginPage() {
-  const { isLogged, loginAction } = useAuthStatus();
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const isValid = login === LOGIN_VALUE && password === PASSWORD_VALUE;
+  const isValid = true;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isLogged = useAppSelector((state) => state.authStatus);
 
   useEffect(() => {
     if (isLogged) {
       navigate(AppRoutes.Main);
     }
-  }, [isLogged, navigate]);
+  }, [navigate, isLogged]);
 
   function handleLoginChange(evt: ChangeEvent<HTMLInputElement>) {
     setLogin(evt.target.value);
@@ -34,11 +33,10 @@ export default function LoginPage() {
     evt.preventDefault();
 
     if (isValid) {
-      dispatch(fetchLogin({
+      dispatch(fetchLoginAction({
         'email': login,
         'password': password,
       }));
-      loginAction();
       navigate(AppRoutes.Main);
     } else {
       // eslint-disable-next-line no-alert

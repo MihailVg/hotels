@@ -18,9 +18,11 @@ import {
 import {
   fetchNearOffersAction,
   fetchOfferAction,
-  fetchReviews,
+  fetchReviewsAction,
+  fetchSetFavorite,
 } from '../../store/api-actions';
 import { useEffect } from 'react';
+import classNames from 'classnames';
 
 export default function OfferPage() {
   const dispatch = useAppDispatch();
@@ -29,8 +31,11 @@ export default function OfferPage() {
   const offer = useAppSelector((state) => state.currentOffer);
   const nearOffers = useAppSelector((state) => state.nearOffers);
   const reviews = useAppSelector((state) => state.reviews);
+  const favorites = useAppSelector((state) => state.favorites);
+  const status = favorites?.find((element) => element.id === id) ? 0 : 1;
+
   useEffect(() => {
-    dispatch(fetchReviews(id));
+    dispatch(fetchReviewsAction(id));
     dispatch(fetchNearOffersAction(id));
     dispatch(fetchOfferAction(id));
     window.scrollTo(0, 0);
@@ -53,6 +58,15 @@ export default function OfferPage() {
     host,
     images,
   } = offer;
+
+  const clickHandler = () => {
+    dispatch(
+      fetchSetFavorite({
+        offerId: offer.id,
+        status: status,
+      })
+    );
+  };
 
   return (
     <div className="page">
@@ -87,7 +101,15 @@ export default function OfferPage() {
               )}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button className={
+                  classNames(
+                    'offer__bookmark-button button',
+                    {
+                      'offer__bookmark-button--active ': !status,
+                    }
+                  )
+                } type="button" onClick={clickHandler}
+                >
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
