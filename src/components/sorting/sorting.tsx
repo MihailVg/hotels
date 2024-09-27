@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
 import { SORT_ARRAY } from '../../const';
 import classNames from 'classnames';
-import { changeSortAction } from '../../store/action';
+import { getSorting } from '../../store/slices/offers/selectors';
+import { store } from '../../store';
+import { setSorting } from '../../store/slices/offers/offers';
 
 export default function Sorting() {
   const [isVisible, setVisible] = useState(false);
-  const sortingType = useAppSelector((state) => state.sorting);
-  const dispatch = useAppDispatch();
+  const sortingType = useAppSelector(getSorting);
   const clickHandler = (item: string) => {
-    dispatch(changeSortAction(item));
+    store.dispatch(setSorting(item));
     setVisible(false);
   };
 

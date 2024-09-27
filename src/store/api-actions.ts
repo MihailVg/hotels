@@ -9,136 +9,123 @@ import {
 } from '../types';
 import { NameSpace } from '../const';
 import { APIRoute } from '../types/api-route';
-import {
-  deleteFavorite,
-  getFavorites,
-  loadNearOffersAction,
-  loadOfferAction,
-  loadOffersAction,
-  loadReviewsAction,
-  loginAction,
-  logoutAction,
-  setFavorite,
-  setOffersLoadingStatusAction,
-  setUser,
-} from './action';
 import { dropToken, saveToken } from '../services/token';
 import {
   FavoriteSendingType,
   ReviewSendingType,
 } from '../types/api-actions.type';
+import { store } from '.';
+import { addFavorite, deleteFavorite } from './slices/favorites/favorites';
 
 type AsyncActionType = {
   extra: AxiosInstance;
 };
 
 export const fetchOffersAction = createAsyncThunk<
-  void,
+  PreviewOfferType[],
   undefined,
   AsyncActionType
->(`${NameSpace.Offers}/fetchOffers`, async (_arg, { dispatch, extra: api }) => {
-  try {
-    dispatch(setOffersLoadingStatusAction(true));
-    const { data } = await api.get<PreviewOfferType[]>(APIRoute.Offers);
-    dispatch(loadOffersAction(data));
-  } finally {
-    dispatch(setOffersLoadingStatusAction(false));
-  }
+>(`${NameSpace.Offers}/fetchOffers`, async (_arg, { extra: api }) => {
+  const { data } = await api.get<PreviewOfferType[]>(APIRoute.Offers);
+
+  return data;
 });
 
 export const fetchOfferAction = createAsyncThunk<
-  void,
+  OfferType,
   string | undefined,
   AsyncActionType
->(`${NameSpace.Offer}/fetchOffer`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.Offer}/fetchOffer`, async (_arg, { extra: api }) => {
   const { data } = await api.get<OfferType>(`${APIRoute.Offers}/${_arg}`);
-  dispatch(loadOfferAction(data));
+
+  return data;
 });
 
 export const fetchNearOffersAction = createAsyncThunk<
-  void,
+  OfferType[],
   string | undefined,
   AsyncActionType
->(
-  `${NameSpace.Offer}/fetchNearOffer`,
-  async (_arg, { dispatch, extra: api }) => {
-    const { data } = await api.get<OfferType[]>(
-      `${APIRoute.Offers}/${_arg}/nearby`
-    );
-    dispatch(loadNearOffersAction(data));
-  }
-);
+>(`${NameSpace.Offer}/fetchNearOffer`, async (_arg, { extra: api }) => {
+  const { data } = await api.get<OfferType[]>(
+    `${APIRoute.Offers}/${_arg}/nearby`
+  );
+
+  return data;
+});
 
 export const fetchReviewsAction = createAsyncThunk<
-  void,
+  ReviewType[],
   string | undefined,
   AsyncActionType
->(
-  `${NameSpace.Reviews}/fetchReviews`,
-  async (_arg, { dispatch, extra: api }) => {
-    const { data } = await api.get<ReviewType[]>(
-      `${APIRoute.Comments}/${_arg}`
-    );
-    dispatch(loadReviewsAction(data));
-  }
-);
+>(`${NameSpace.Reviews}/fetchReviews`, async (_arg, { extra: api }) => {
+  const { data } = await api.get<ReviewType[]>(`${APIRoute.Comments}/${_arg}`);
+
+  return data;
+});
 
 export const fetchLoginAction = createAsyncThunk<
-  UserType | void,
+  UserType,
   AuthDataType,
   AsyncActionType
 >(
   `${NameSpace.User}/fetchLogin`,
-  async ({ email, password }, { dispatch, extra: api }) => {
+  async ({ email, password }, { extra: api }) => {
     const { data } = await api.post<UserType>(APIRoute.Login, {
       email,
       password,
     });
-    dispatch(loginAction(data));
+
     saveToken(data.token);
+
+    return data;
   }
 );
 
-export const checkAuthAction = createAsyncThunk<
-  void,
+export const getUserAction = createAsyncThunk<
+  UserType,
   undefined,
   AsyncActionType
->(`${NameSpace.Offer}/checkAuth`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.Offer}/checkAuth`, async (_arg, { extra: api }) => {
   const { data } = await api.get<UserType>(APIRoute.Login);
-  dispatch(setUser(data));
+
+  saveToken(data.token);
+
+  return data;
 });
 
 export const fetchLogoutAction = createAsyncThunk<
   void,
   undefined,
   AsyncActionType
->(`${NameSpace.User}/logout`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.User}/logout`, async (_arg, { extra: api }) => {
   await api.delete(APIRoute.Login);
+
   dropToken();
-  dispatch(logoutAction());
 });
 
 export const fetchGetFavorites = createAsyncThunk<
-  void,
+  PreviewOfferType[],
   undefined,
   AsyncActionType
->(`${NameSpace.User}/getFavorites`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.User}/getFavorites`, async (_arg, { extra: api }) => {
   const { data } = await api.get<PreviewOfferType[]>(APIRoute.Favorite);
-  dispatch(getFavorites(data));
+
+  return data;
 });
 
 export const fetchSetFavorite = createAsyncThunk<
   void,
   FavoriteSendingType,
   AsyncActionType
->(`${NameSpace.User}/fetchLogin`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.User}/fetchLogin`, async (_arg, { extra: api }) => {
   const { data } = await api.post<OfferType>(
     `${APIRoute.Favorite}/${_arg.offerId}/${_arg.status}`
   );
+
   if (_arg.status) {
-    dispatch(setFavorite(data));
+    store.dispatch(addFavorite(data));
   } else {
-    dispatch(deleteFavorite(data));
+    store.dispatch(deleteFavorite(data));
   }
 });
 
@@ -146,10 +133,9 @@ export const fetchSetReviewAction = createAsyncThunk<
   ReviewSendingType | void,
   ReviewSendingType,
   AsyncActionType
->(`${NameSpace.User}/fetchLogin`, async (_arg, { dispatch, extra: api }) => {
+>(`${NameSpace.User}/fetchLogin`, async (_arg, { extra: api }) => {
   await api.post(`${APIRoute.Comments}/${_arg.id}`, {
     comment: _arg.comment,
     rating: _arg.rating,
   });
-  dispatch(fetchReviewsAction(_arg.id));
 });

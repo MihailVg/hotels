@@ -1,4 +1,5 @@
 import { useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { getAuthStatus } from '../../store/slices/user/selectors';
 import { ReviewType } from '../../types';
 import ReviewForm from '../review-form/review-form';
 import ReviewsList from '../reviews-list/reviews-list';
@@ -8,7 +9,8 @@ type ReviewsSectionProps = {
 };
 
 export default function ReviewsSection({ reviews }: ReviewsSectionProps) {
-  const isLogged = useAppSelector((state) => state.authStatus);
+  const isLogged = useAppSelector(getAuthStatus);
+
   return (
     <section className="offer__reviews reviews">
       <h2 className="reviews__title">

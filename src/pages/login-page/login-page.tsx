@@ -4,16 +4,17 @@ import Header from '../../components/header/header';
 import { Helmet } from 'react-helmet-async';
 import { CITY_NAME } from './login-page.consts';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
 import { fetchLoginAction } from '../../store/api-actions';
+import { store } from '../../store';
+import { getAuthStatus } from '../../store/slices/user/selectors';
 
 export default function LoginPage() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const isValid = true;
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const isLogged = useAppSelector((state) => state.authStatus);
+  const isLogged = useAppSelector(getAuthStatus);
 
   useEffect(() => {
     if (isLogged) {
@@ -33,7 +34,7 @@ export default function LoginPage() {
     evt.preventDefault();
 
     if (isValid) {
-      dispatch(fetchLoginAction({
+      store.dispatch(fetchLoginAction({
         'email': login,
         'password': password,
       }));

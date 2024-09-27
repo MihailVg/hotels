@@ -3,10 +3,11 @@ import { AppRoutes, PreviewOfferType } from '../../types';
 import { changeOfferPageId, getRatingPercent } from '../../utils/utils';
 import classNames from 'classnames';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
 import { fetchSetFavorite } from '../../store/api-actions';
+import { getFavorites } from '../../store/slices/favorites/selectors';
+import { store } from '../../store';
 
 type OfferCardProps = {
   offer: PreviewOfferType;
@@ -16,8 +17,7 @@ type OfferCardProps = {
 export default function OfferCard({ offer, onActiveOffer }: OfferCardProps) {
   const { isPremium, previewImage, price, title, rating, type, id } = offer;
   const path = changeOfferPageId(id);
-  const dispatch = useAppDispatch();
-  const favorites = useAppSelector((state) => state.favorites);
+  const favorites = useAppSelector(getFavorites);
   const status = favorites?.find((element) => element.id === id) ? 0 : 1;
 
   const { pathname } = useLocation();
@@ -41,7 +41,7 @@ export default function OfferCard({ offer, onActiveOffer }: OfferCardProps) {
   };
 
   const clickHandler = () => {
-    dispatch(
+    store.dispatch(
       fetchSetFavorite({
         offerId: id,
         status: status,

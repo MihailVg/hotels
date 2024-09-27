@@ -4,16 +4,19 @@ import Header from '../../components/header/header';
 import { AppRoutes } from '../../types';
 import OfferCard from '../../components/offer-card/offer-card';
 import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
+import { useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
 import { useEffect } from 'react';
 import { fetchGetFavorites } from '../../store/api-actions';
+import { getFavorites } from '../../store/slices/favorites/selectors';
+import { store } from '../../store';
 
 export default function FavoritesPage() {
-  const dispatch = useAppDispatch();
-  const favoritePlaces = useAppSelector((state) => state.favorites);
+  const favoritePlaces = useAppSelector(getFavorites);
+
   useEffect(() => {
-    dispatch(fetchGetFavorites());
-  }, [dispatch]);
+    store.dispatch(fetchGetFavorites());
+  }, []);
+
   const uniqCitiesList = [
     ...new Set(favoritePlaces?.map((offer) => offer.city.name))
   ].sort((a, b) => a > b ? 1 : -1);

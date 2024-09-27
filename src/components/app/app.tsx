@@ -10,15 +10,20 @@ import { useAppSelector } from '../../hooks/redux-hooks/redux-hooks';
 import Spinner from '../spinner/spinner';
 import { useEffect } from 'react';
 import { store } from '../../store';
-import { checkAuthAction } from '../../store/api-actions';
+import { fetchGetFavorites, fetchOffersAction, getUserAction } from '../../store/api-actions';
+import { getCurrentCity, getOffersLoadingStatus } from '../../store/slices/offers/selectors';
+import { getAuthStatus } from '../../store/slices/user/selectors';
 
 function App(): JSX.Element {
-  const isLogged = useAppSelector((state) => state.authStatus);
-  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+  const isLogged = useAppSelector(getAuthStatus);
+  const isOfferLoading = useAppSelector(getOffersLoadingStatus);
+  const activeCity = useAppSelector(getCurrentCity);
 
   useEffect(() => {
-    store.dispatch(checkAuthAction());
-  }, []);
+    store.dispatch(fetchOffersAction());
+    store.dispatch(getUserAction());
+    store.dispatch(fetchGetFavorites());
+  }, [activeCity]);
 
   if (isOfferLoading) {
     return <Spinner />;

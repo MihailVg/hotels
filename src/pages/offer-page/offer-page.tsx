@@ -12,7 +12,6 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import { useParams } from 'react-router-dom';
 import ReviewsSection from '../../components/reviews-section/reviews-section';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
 import {
@@ -23,23 +22,28 @@ import {
 } from '../../store/api-actions';
 import { useEffect } from 'react';
 import classNames from 'classnames';
+import { getOffer } from '../../store/slices/offer/selectors';
+import { store } from '../../store';
+import { getNearPlaces } from '../../store/slices/near-offers/selectors';
+import { getOffers } from '../../store/slices/offers/selectors';
+import { getReviews } from '../../store/slices/reviews/selectors';
+import { getFavorites } from '../../store/slices/favorites/selectors';
 
 export default function OfferPage() {
-  const dispatch = useAppDispatch();
   const { id } = useParams();
-  const offers = useAppSelector((state) => state.offers);
-  const offer = useAppSelector((state) => state.currentOffer);
-  const nearOffers = useAppSelector((state) => state.nearOffers);
-  const reviews = useAppSelector((state) => state.reviews);
-  const favorites = useAppSelector((state) => state.favorites);
+  const offer = useAppSelector(getOffer);
+  const nearOffers = useAppSelector(getNearPlaces);
+  const offers = useAppSelector(getOffers);
+  const reviews = useAppSelector(getReviews);
+  const favorites = useAppSelector(getFavorites);
   const status = favorites?.find((element) => element.id === id) ? 0 : 1;
 
   useEffect(() => {
-    dispatch(fetchReviewsAction(id));
-    dispatch(fetchNearOffersAction(id));
-    dispatch(fetchOfferAction(id));
+    store.dispatch(fetchOfferAction(id));
+    store.dispatch(fetchNearOffersAction(id));
+    store.dispatch(fetchReviewsAction(id));
     window.scrollTo(0, 0);
-  }, [dispatch, id]);
+  }, [id]);
 
   if (!offer) {
     return <NotFoundPage />;
@@ -60,7 +64,7 @@ export default function OfferPage() {
   } = offer;
 
   const clickHandler = () => {
-    dispatch(
+    store.dispatch(
       fetchSetFavorite({
         offerId: offer.id,
         status: status,

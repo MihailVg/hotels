@@ -3,20 +3,21 @@ import LocationTabs from '../../components/location-tabs/location-tabs';
 import { Helmet } from 'react-helmet-async';
 import MainPageContent from './main-page-content/main-page-content';
 import {
-  useAppDispatch,
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
-import { changeCityAction } from '../../store/action';
-
+import { getCurrentCity, getOffers, getSorting } from '../../store/slices/offers/selectors';
+import { setCurrentCity, setSorting } from '../../store/slices/offers/offers';
+import { store } from '../../store';
+import { useEffect } from 'react';
 
 export default function MainPage() {
-  const activeCity = useAppSelector((state) => state.currentCity);
-  const offers = useAppSelector((state) => state.offers);
-  const dispatch = useAppDispatch();
+  const activeCity = useAppSelector(getCurrentCity);
+  const offers = useAppSelector(getOffers);
+  const sortingType = useAppSelector(getSorting);
 
-  const filteredOffersByCity = offers.filter(
-    (offer) => offer.city.name === activeCity
-  );
+  useEffect(() => {
+    store.dispatch(setSorting(sortingType));
+  }, [sortingType]);
 
   return (
     <div className="page page--gray page--main">
@@ -30,9 +31,9 @@ export default function MainPage() {
         <h1 className="visually-hidden">Cities</h1>
         <LocationTabs
           activeCity={activeCity}
-          onActiveCity={(city) => dispatch(changeCityAction({ city }))}
+          onActiveCity={(city) => store.dispatch(setCurrentCity(city))}
         />
-        <MainPageContent offers={filteredOffersByCity} />
+        <MainPageContent offers={offers} />
       </main>
     </div>
   );

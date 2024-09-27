@@ -1,14 +1,12 @@
 import { ChangeEvent, FormEvent, Fragment, useState } from 'react';
 import { STARS_AMOUNT } from './review-form.consts';
-import { useAppDispatch } from '../../hooks/redux-hooks/redux-hooks';
 import { fetchSetReviewAction } from '../../store/api-actions';
 import { useParams } from 'react-router-dom';
+import { store } from '../../store';
 
 export default function ReviewForm() {
-  const [isCommentSend, setIsCommentSend] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const dispatch = useAppDispatch();
   const { id } = useParams();
   const isValid = rating && comment.length > 50;
   const sortedStars = STARS_AMOUNT.sort((a : number, b: number) => b - a);
@@ -21,19 +19,15 @@ export default function ReviewForm() {
     evt.preventDefault();
 
     if (isValid && id) {
-      dispatch(fetchSetReviewAction({
+      store.dispatch(fetchSetReviewAction({
         id: id,
         comment: comment,
         rating: rating,
       }));
-      setIsCommentSend(true);
     }
     setComment('');
+    setRating(0);
   };
-
-  if(isCommentSend) {
-    return null;
-  }
 
   return (
     <form className="reviews__form form" onSubmit={handleSubmit}>
@@ -50,6 +44,7 @@ export default function ReviewForm() {
               value={item}
               id={`${item}-stars`}
               type="radio"
+              checked={rating === item}
             />
             <label
               htmlFor={`${item}-stars`}
