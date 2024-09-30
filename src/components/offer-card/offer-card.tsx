@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {
   useAppSelector,
 } from '../../hooks/redux-hooks/redux-hooks';
-import { fetchSetFavorite } from '../../store/api-actions';
+import { fetchGetFavorites, fetchSetFavorite } from '../../store/api-actions';
 import { getFavorites } from '../../store/slices/favorites/selectors';
 import { store } from '../../store';
 
@@ -47,6 +47,8 @@ export default function OfferCard({ offer, onActiveOffer }: OfferCardProps) {
         status: status,
       })
     );
+
+    store.dispatch(fetchGetFavorites());
   };
 
   return (

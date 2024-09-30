@@ -14,8 +14,7 @@ import {
   FavoriteSendingType,
   ReviewSendingType,
 } from '../types/api-actions.type';
-import { store } from '.';
-import { addFavorite, deleteFavorite } from './slices/favorites/favorites';
+
 
 type AsyncActionType = {
   extra: AxiosInstance;
@@ -118,15 +117,9 @@ export const fetchSetFavorite = createAsyncThunk<
   FavoriteSendingType,
   AsyncActionType
 >(`${NameSpace.User}/fetchLogin`, async (_arg, { extra: api }) => {
-  const { data } = await api.post<OfferType>(
+  await api.post<OfferType>(
     `${APIRoute.Favorite}/${_arg.offerId}/${_arg.status}`
   );
-
-  if (_arg.status) {
-    store.dispatch(addFavorite(data));
-  } else {
-    store.dispatch(deleteFavorite(data));
-  }
 });
 
 export const fetchSetReviewAction = createAsyncThunk<

@@ -12,10 +12,8 @@ import { useEffect } from 'react';
 import { store } from '../../store';
 import { fetchGetFavorites, fetchOffersAction, getUserAction } from '../../store/api-actions';
 import { getCurrentCity, getOffersLoadingStatus } from '../../store/slices/offers/selectors';
-import { getAuthStatus } from '../../store/slices/user/selectors';
 
 function App(): JSX.Element {
-  const isLogged = useAppSelector(getAuthStatus);
   const isOfferLoading = useAppSelector(getOffersLoadingStatus);
   const activeCity = useAppSelector(getCurrentCity);
 
@@ -37,7 +35,7 @@ function App(): JSX.Element {
       <Route
         path={AppRoutes.Favorites}
         element={
-          <PrivateRoute auth={isLogged} redirectTo={AppRoutes.Login}>
+          <PrivateRoute redirectTo={AppRoutes.Login}>
             <FavoritesPage />
           </PrivateRoute>
         }
